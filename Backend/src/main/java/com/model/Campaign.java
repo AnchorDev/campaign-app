@@ -1,4 +1,4 @@
-package com.code;
+package com.model;
 
 import jakarta.persistence.*;
 import java.util.List;
