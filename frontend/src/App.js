@@ -12,6 +12,9 @@ function App() {
     town: '',
     radius: ''
   });
+  const [selectedKeywords, setSelectedKeywords] = useState([]);
+
+  const predefinedKeywords = ['marketing', 'advertising', 'sales', 'promotion', 'digital', 'social media', 'SEO', 'content marketing'];
 
   useEffect(() => {
     fetch("http://localhost:8080/api/campaigns")
@@ -19,6 +22,19 @@ function App() {
       .then(data => setCampaigns(data))
       .catch(error => console.error("Error fetching campaigns:", error));
   }, []);
+
+  const handleKeywordInput = (e) => {
+    const input = e.target.value;
+    handleChange(e);
+    if(input) {
+      const inputParts = input.split(',');
+      const lastWord = inputParts[inputParts.length - 1].trim().toLowerCase();
+      const filteredKeywords = predefinedKeywords.filter(keyword => keyword.toLowerCase().startsWith(lastWord));
+      setSelectedKeywords(filteredKeywords);
+    } else {
+      setSelectedKeywords([]);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -89,7 +105,7 @@ function App() {
           name="keywords"
           placeholder="Keywords (comma separated)"
           value={newCampaign.keywords}
-          onChange={handleChange}
+          onChange={handleKeywordInput}
           required
         />
         <input
