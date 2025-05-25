@@ -100,6 +100,26 @@ function App() {
           onChange={handleChange}
           required
         />
+        {selectedKeywords.length > 0 && (
+          <ul style={{ listStyleType: 'none', padding: 0 }}>
+            {selectedKeywords.map((keyword) => (
+              <li
+                key={keyword}
+                onClick={() => {
+                  const parts = newCampaign.keywords.split(',');
+                  parts[parts.length - 1] = keyword;
+                  setNewCampaign({
+                    ...newCampaign,
+                    keywords: parts.join(', ')
+                  });
+                }}
+                style={{ cursor: 'pointer', color: 'blue' }}
+              >
+                {keyword}
+              </li>
+            ))}
+          </ul>
+        )}
         <input
           type="text"
           name="keywords"
