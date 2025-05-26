@@ -13,7 +13,13 @@ function App() {
     radius: ''
   });
   const [selectedKeywords, setSelectedKeywords] = useState([]);
-  const predefinedKeywords = ['marketing', 'advertising', 'sales', 'promotion', 'digital', 'social media', 'SEO', 'content marketing'];
+  const predefinedKeywords = ['marketing', 'advertising', 'sales', 'promotion', 'digital', 'social media', 'SEO', 'content marketing', 'email marketing', 
+    'PPC', 'branding', 'analytics', 'strategy', 'campaign management', 'lead generation', 'conversion optimization', 'customer engagement', 'market research', 
+    'influencer marketing', 'affiliate marketing', 'video marketing', 'mobile marketing', 'event marketing', 'public relations', 'community management', 'customer retention', 'CRM',
+    'B2B', 'B2C', 'e-commerce', 'local marketing', 'search engine marketing', 'display advertising', 'retargeting', 'A/B testing', 'user experience',
+    'web analytics', 'social media advertising', 'content creation', 'copywriting', 'graphic design', 'email campaigns', 'marketing automation', 'data analysis',
+    'lead nurturing', 'sales funnel', 'customer journey', 'brand awareness', 'reputation management', 'crisis communication', 'stakeholder engagement', 'event planning',
+    'sponsorship', 'partnerships', 'networking', 'trade shows', 'conferences', 'webinars', 'podcasts', 'blogging', 'vlogging', 'live streaming',];
   const [showForm, setShowForm] = useState(false);
 
   const activeCampaigns = campaigns.filter(campaign => campaign.status);
