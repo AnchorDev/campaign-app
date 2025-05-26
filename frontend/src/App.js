@@ -28,17 +28,23 @@ function App() {
       .catch(error => console.error("Error fetching campaigns:", error));
   }, []);
 
-  const handleKeywordInput = (e) => {
-    const input = e.target.value;
-    handleChange(e);
-    if(input) {
-      const inputParts = input.split(',');
-      const lastWord = inputParts[inputParts.length - 1].trim().toLowerCase();
-      const filteredKeywords = predefinedKeywords.filter(keyword => keyword.toLowerCase().startsWith(lastWord));
-      setSelectedKeywords(filteredKeywords);
-    } else {
-      setSelectedKeywords([]);
-    }
+  const handleKeywordInput = (e) => { 
+    const input = e.target.value; 
+    handleChange(e); 
+
+    const inputParts = input.split(',').map(part => part.trim().toLowerCase()); 
+
+    const lastWord = inputParts[inputParts.length - 1] || ""; 
+    const existingKeywords = inputParts .slice(0, inputParts.length - 1).filter(Boolean); 
+
+    if (input.endsWith(',')) { 
+      setSelectedKeywords([]); 
+      return; 
+    } 
+
+    const filtered = predefinedKeywords.filter(kw => kw.toLowerCase().startsWith(lastWord) && !existingKeywords.includes(kw.toLowerCase())).sort().slice(0, 5);
+
+    setSelectedKeywords(filtered);
   };
 
   const handleDelete = (id) => {
@@ -156,7 +162,21 @@ function App() {
   return (
     <div className="App">
       <h1>Campaign Manager</h1>
-      <button onClick={() => setShowForm(!showForm)}>
+      <button onClick={() => {
+        if(showForm) {
+          setEditCampaign(null);
+          setNewCampaign({
+            name: '',
+            keywords: '',
+            bidAmount: '',
+            campaignFund: '',
+            status: true,
+            town: '',
+            radius: ''
+          });
+        }
+        setShowForm(!showForm);
+      }}>
         {showForm ? 'Hide Form' : 'Create New Campaign'}
       </button>
       {showForm && (
@@ -172,26 +192,7 @@ function App() {
           onChange={handleChange}
           required
         />
-        {selectedKeywords.length > 0 && (
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            {selectedKeywords.map((keyword) => (
-              <li
-                key={keyword}
-                onClick={() => {
-                  const parts = newCampaign.keywords.split(',');
-                  parts[parts.length - 1] = keyword;
-                  setNewCampaign({
-                    ...newCampaign,
-                    keywords: parts.join(', ')
-                  });
-                }}
-                style={{ cursor: 'pointer', color: 'blue' }}
-              >
-                {keyword}
-              </li>
-            ))}
-          </ul>
-        )}
+        <div style={{ position: 'relative', width: '100%' }}>
         <input
           type="text"
           name="keywords"
@@ -199,7 +200,32 @@ function App() {
           value={newCampaign.keywords}
           onChange={handleKeywordInput}
           required
+          style={{ width: '100%' }}
         />
+        {selectedKeywords.length > 0 && (
+          <ul style={{ position: 'absolute', top: '100%', left: 0, backgroundColor: 'white', border: '1px solid #ccc', width: '100%', zIndex: 1, padding: 0, margin: 0, listStyleType: 'none',
+          margin: 0, maxHeight: '150px', overflowY: 'auto' }}>
+            {selectedKeywords.map((keyword) => (
+              <li
+                key={keyword}
+                onClick={() => {
+                  const parts = newCampaign.keywords.split(',');
+                  parts[parts.length - 1] = keyword;
+                  const updated = parts.map(part => part.trim()).filter(part => part).join(', ') + ', ';
+                  setNewCampaign({
+                    ...newCampaign,
+                    keywords: updated
+                  });
+                  setSelectedKeywords([]);
+                }}
+                style={{ cursor: 'pointer', padding: '5px 10px', backgroundColor: '#f0f0f0', borderBottom: '1px solid #ccc', ':hover': { backgroundColor: '#e0e0e0' } }}
+              >
+                {keyword}
+              </li>
+            ))}
+          </ul>
+        )}
+        </div>
         <input
           type="number"
           name="bidAmount"
