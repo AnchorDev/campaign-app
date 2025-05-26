@@ -36,6 +36,32 @@ function App() {
     }
   };
 
+  const handleDelete = (id) => {
+    fetch(`http://localhost:8080/api/campaigns/${id}`, {
+      method: 'DELETE'
+    }).then(() => {
+      setCampaigns(campaigns.filter(campaign => campaign.id !== id));
+    }
+    ).catch(error => console.error("Error deleting campaign:", error));
+  };
+
+  const handleToggleStatus = (campaign) => {
+    const updatedCampaign = { ...campaign, status: !campaign.status };
+    fetch(`http://localhost:8080/api/campaigns/${campaign.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedCampaign)
+    })
+    .then(response => response.json())
+    .then(data => {
+      setCampaigns(campaigns.map(c => c.id === data.id ? data : c));
+    }
+    )
+    .catch(error => console.error("Error updating campaign status:", error));
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNewCampaign({
@@ -87,6 +113,15 @@ function App() {
         {campaigns.map(campaign => (
           <li key={campaign.id}>
             <strong>{campaign.name}</strong> - {campaign.town}, {campaign.radius}km
+            <span style={{ marginLeft: '10px', color: campaign.status ? 'green' : 'red' }}>
+              {campaign.status ? 'Active' : 'Inactive'}
+            </span>
+            <button onClick={() => handleToggleStatus(campaign)} style={{ marginLeft: '10px' }}>
+              Toggle status
+            </button>
+            <button onClick={() => handleDelete(campaign.id)} style={{ marginLeft: '10px', color: 'red' }}>
+              Delete Campaign
+            </button>
           </li>
         ))}
       </ul>
