@@ -101,7 +101,7 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const keywordsArray = newCampaign.keywords.split(',').map(keyword => keyword.trim().filter(keyword => keyword !== ''));
+    const keywordsArray = newCampaign.keywords.split(',').map(keyword => keyword.trim()).filter(keyword => keyword !== '');
 
     if (keywordsArray.length > 4) {
       alert("You can only enter up to 4 keywords.");
