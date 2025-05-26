@@ -101,9 +101,21 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const keywordsArray = newCampaign.keywords.split(',').map(keyword => keyword.trim().filter(keyword => keyword !== ''));
+
+    if (keywordsArray.length > 4) {
+      alert("You can only enter up to 4 keywords.");
+      return;
+    }
+    if (keywordsArray.some(keyword => keyword.length > 20)) {
+      alert("Each keyword must be 20 characters or less.");
+      return;
+    }
+
+
     const campaignToSend = {
       ...newCampaign,
-      keywords: newCampaign.keywords.split(',').map(keyword => keyword.trim()),
+      keywords: keywordsArray,
       bidAmount: parseFloat(newCampaign.bidAmount),
       campaignFund: parseFloat(newCampaign.campaignFund),
       radius: parseInt(newCampaign.radius)
@@ -154,6 +166,7 @@ function App() {
         <input
           type="text"
           name="name"
+          maxLength={50}
           placeholder="Campaign Name"
           value={newCampaign.name}
           onChange={handleChange}
