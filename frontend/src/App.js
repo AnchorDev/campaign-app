@@ -13,8 +13,11 @@ function App() {
     radius: ''
   });
   const [selectedKeywords, setSelectedKeywords] = useState([]);
-
   const predefinedKeywords = ['marketing', 'advertising', 'sales', 'promotion', 'digital', 'social media', 'SEO', 'content marketing'];
+  const [showForm, setShowForm] = useState(false);
+
+  const activeCampaigns = campaigns.filter(campaign => campaign.status);
+  const inactiveCampaigns = campaigns.filter(campaign => !campaign.status);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/campaigns")
@@ -107,26 +110,13 @@ function App() {
   return (
     <div className="App">
       <h1>Campaign Manager</h1>
-
-      <h2>Active Campaigns</h2>
-      <ul>
-        {campaigns.map(campaign => (
-          <li key={campaign.id}>
-            <strong>{campaign.name}</strong> - {campaign.town}, {campaign.radius}km
-            <span style={{ marginLeft: '10px', color: campaign.status ? 'green' : 'red' }}>
-              {campaign.status ? 'Active' : 'Inactive'}
-            </span>
-            <button onClick={() => handleToggleStatus(campaign)} style={{ marginLeft: '10px' }}>
-              Toggle status
-            </button>
-            <button onClick={() => handleDelete(campaign.id)} style={{ marginLeft: '10px', color: 'red' }}>
-              Delete Campaign
-            </button>
-          </li>
-        ))}
-      </ul>
-      <h2>Create New Campaign</h2>
-      <form onSubmit={handleSubmit}>
+      <button onClick={() => setShowForm(!showForm)}>
+        {showForm ? 'Hide Form' : 'Create New Campaign'}
+      </button>
+      {showForm && (
+        <div className="form-container">
+          <h2>Create New Campaign</h2>
+      <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
         <input
           type="text"
           name="name"
@@ -211,6 +201,43 @@ function App() {
         </label>
         <button type="submit">Create Campaign</button>
       </form>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', marginTop: '20px' }}>
+        <div style={{ flex: 1 }}>
+          <h2>Active Campaigns</h2>
+          {activeCampaigns.length > 0 ? (
+            <ul>
+              {activeCampaigns.map(campaign => (
+                <li key={campaign.id}>
+                  <strong>{campaign.name}</strong> - {campaign.keywords.join(', ')} - ${campaign.bidAmount} - ${campaign.campaignFund} - {campaign.town} - {campaign.radius}km
+                  <button onClick={() => handleToggleStatus(campaign)}>Deactivate</button>
+                  <button onClick={() => handleDelete(campaign.id)}>Delete</button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No active campaigns.</p>
+          )}
+        </div>
+        <div style={{ flex: 1 }}>
+          <h2>Inactive Campaigns</h2>
+          {inactiveCampaigns.length > 0 ? (
+            <ul>
+              {inactiveCampaigns.map(campaign => (
+                <li key={campaign.id}>
+                  <strong>{campaign.name}</strong> - {campaign.keywords.join(', ')} - ${campaign.bidAmount} - ${campaign.campaignFund} - {campaign.town} - {campaign.radius}km
+                  <button onClick={() => handleToggleStatus(campaign)}>Activate</button>
+                  <button onClick={() => handleDelete(campaign.id)}>Delete</button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No inactive campaigns.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
