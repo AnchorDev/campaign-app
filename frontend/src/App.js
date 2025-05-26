@@ -19,6 +19,8 @@ function App() {
   const activeCampaigns = campaigns.filter(campaign => campaign.status);
   const inactiveCampaigns = campaigns.filter(campaign => !campaign.status);
 
+  const [editCampaign, setEditCampaign] = useState(null);
+
   useEffect(() => {
     fetch("http://localhost:8080/api/campaigns")
       .then(response => response.json())
@@ -65,12 +67,35 @@ function App() {
     .catch(error => console.error("Error updating campaign status:", error));
   };
 
+  const handleCancelEdit = () => {
+    setEditCampaign(null);
+    setNewCampaign({
+      name: '',
+      keywords: '',
+      bidAmount: '',
+      campaignFund: '',
+      status: true,
+      town: '',
+      radius: ''
+    });
+    setShowForm(false);
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNewCampaign({
       ...newCampaign,
       [name]: type === 'checkbox' ? checked : value
     });
+  };
+
+  const handleEdit = (campaign) => {
+    setNewCampaign({
+      ...campaign,
+      keywords: campaign.keywords.join(', ')
+    });
+    setEditCampaign(campaign.id);
+    setShowForm(true);
   };
 
   const handleSubmit = (e) => {
@@ -84,8 +109,13 @@ function App() {
       radius: parseInt(newCampaign.radius)
     };
 
-    fetch("http://localhost:8080/api/campaigns", {
-      method: 'POST',
+    const method = editCampaign ? 'PUT' : 'POST';
+    const url = editCampaign ? `http://localhost:8080/api/campaigns/${editCampaign}` : "http://localhost:8080/api/campaigns";
+    
+    setShowForm(false);
+
+    fetch(url, {
+      method: method,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -93,7 +123,11 @@ function App() {
     })
     .then(response => response.json())
     .then(data => {
-      setCampaigns([...campaigns, data]);
+      if (editCampaign) {
+        setCampaigns(campaigns.map(c => (c.id === editCampaign ? data : c)));
+      } else {
+        setCampaigns([...campaigns, data]);
+      }
       setNewCampaign({
         name: '',
         keywords: '',
@@ -115,7 +149,7 @@ function App() {
       </button>
       {showForm && (
         <div className="form-container">
-          <h2>Create New Campaign</h2>
+      <h2>{editCampaign ? 'Edit Campaign' : 'Create Campaign'}</h2>
       <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
         <input
           type="text"
@@ -199,8 +233,15 @@ function App() {
           />
           Active
         </label>
-        <button type="submit">Create Campaign</button>
+        <button type="submit">
+          {editCampaign ? 'Update Campaign' : 'Create Campaign'}
+        </button>
       </form>
+      {editCampaign && (
+        <button type="button" onClick={handleCancelEdit} style={{ marginTop: '10px' }}>
+          Cancel Edit
+        </button>
+      )}
         </div>
       )}
 
@@ -214,6 +255,7 @@ function App() {
                   <strong>{campaign.name}</strong> - {campaign.keywords.join(', ')} - ${campaign.bidAmount} - ${campaign.campaignFund} - {campaign.town} - {campaign.radius}km
                   <button onClick={() => handleToggleStatus(campaign)}>Deactivate</button>
                   <button onClick={() => handleDelete(campaign.id)}>Delete</button>
+                  <button onClick={() => handleEdit(campaign)}>Edit</button>
                 </li>
               ))}
             </ul>
@@ -230,6 +272,7 @@ function App() {
                   <strong>{campaign.name}</strong> - {campaign.keywords.join(', ')} - ${campaign.bidAmount} - ${campaign.campaignFund} - {campaign.town} - {campaign.radius}km
                   <button onClick={() => handleToggleStatus(campaign)}>Activate</button>
                   <button onClick={() => handleDelete(campaign.id)}>Delete</button>
+                  <button onClick={() => handleEdit(campaign)}>Edit</button>
                 </li>
               ))}
             </ul>
