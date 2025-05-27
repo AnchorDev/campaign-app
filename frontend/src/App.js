@@ -28,8 +28,8 @@ function App() {
   const handleFormSubmit = (campaignData) => {
     const method = editCampaign ? 'PUT' : 'POST';
     const url = editCampaign
-      ? `https://campaign-app-production-0136.up.railway.app/api/campaigns/${editCampaign.id}`
-      : "https://campaign-app-production-0136.up.railway.app/api/campaigns";
+      ? `https://campaign-app-e8fp.onrender.com/${editCampaign.id}`
+      : "https://campaign-app-e8fp.onrender.com";
 
     const oldFund = editCampaign?.status ? parseFloat(editCampaign.campaignFund) : 0;
     const newFund = campaignData.status ? parseFloat(campaignData.campaignFund) : 0;
@@ -59,7 +59,7 @@ function App() {
     const toggledStatus = !campaign.status;
     const updated = { ...campaign, status: toggledStatus };
 
-    fetch(`https://campaign-app-production-0136.up.railway.app/api/campaigns/${campaign.id}`, {
+    fetch(`https://campaign-app-e8fp.onrender.com/${campaign.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updated)
@@ -76,7 +76,7 @@ function App() {
   };
 
   const handleDelete = (campaign) => {
-  fetch(`https://campaign-app-production-0136.up.railway.app/api/campaigns/${campaign.id}`, {
+  fetch(`https://campaign-app-e8fp.onrender.com/${campaign.id}`, {
     method: 'DELETE'
   })
     .then(() => {
