@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCampaigns } from './hooks/useCampaigns';
 import CampaignForm from './components/CampaignForm';
 import CampaignList from './components/CampaignList';
@@ -19,6 +19,13 @@ function App() {
   const [editCampaign, setEditCampaign] = useState(null);
 
   const [emeraldBalance, setEmeraldBalance] = useState(1000.00);
+
+  useEffect(() => {
+    const activeFunds = campaigns
+      .filter(c => c.status)
+      .reduce((sum, c) => sum + parseFloat(c.campaignFund || 0), 0);
+    setEmeraldBalance(1000 - activeFunds);
+  }, [campaigns]);
 
   const handleEdit = (campaign) => {
     setEditCampaign(campaign);
