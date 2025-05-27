@@ -76,12 +76,12 @@ function App() {
         />
       )}
 
-      <div style={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
-        <div>
+      <div className='campaign-container'>
+        <div className='campaign-column'>
           <h2>Active Campaigns</h2>
           <CampaignList campaigns={active} onEdit={handleEdit} onDelete={deleteCampaign} onToggle={updateCampaign} />
         </div>
-        <div>
+        <div className='campaign-column'>
           <h2>Inactive Campaigns</h2>
           <CampaignList campaigns={inactive} onEdit={handleEdit} onDelete={deleteCampaign} onToggle={updateCampaign} />
         </div>
