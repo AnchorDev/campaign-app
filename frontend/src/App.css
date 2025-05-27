@@ -46,7 +46,7 @@ h1 {
   background-color: #ffffff;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
   min-height: 200px;
 }
 ul {
@@ -75,4 +75,16 @@ li {
   flex-direction: column;
   gap: 8px;
   align-items: flex-end;
+}
+.inactive-btn {
+  background-color: #28a745;
+}
+.inactive-btn:hover {
+  background-color: #218838;
+}
+.active-btn {
+  background-color: #dc3545;
+}
+.active-btn:hover {
+  background-color: #c82333;
 }
