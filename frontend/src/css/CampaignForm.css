@@ -1,0 +1,74 @@
+.form-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+}
+
+.campaign-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-row input,
+.form-row select {
+  flex: 1;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.typeahead-wrapper {
+  position: relative;
+  flex: 3;
+}
+
+.typeahead-dropdown {
+  position: absolute;
+  top: 70%;
+  left: 37.5%;
+  background: white;
+  border: 1px solid #ccc;
+  width: 24.5%;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 10;
+  border-radius: 5px;
+}
+
+.typeahead-dropdown li {
+  padding: 8px;
+  cursor: pointer;
+}
+.typeahead-dropdown li:hover {
+  background-color: #eee;
+}
+
+.status-toggle {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 100px;
+}
+.status-toggle.active {
+  background-color: #28a745;
+}
+.status-toggle.inactive {
+  background-color: #dc3545;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

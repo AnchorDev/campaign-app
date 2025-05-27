@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { filterKeywords } from '../utils/keywordUtils';
+import '../css/CampaignForm.css';
 
 function CampaignForm({
   predefinedKeywords,
@@ -10,6 +11,7 @@ function CampaignForm({
 }) {
   const [formData, setFormData] = useState(initialData);
   const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     const updatedData = {
@@ -35,6 +37,7 @@ function CampaignForm({
 
     const filtered = filterKeywords(input, predefinedKeywords);
     setSuggestions(filtered);
+    setShowSuggestions(true);
 
     if (input.endsWith(',')) setSuggestions([]);
   };
@@ -45,6 +48,7 @@ function CampaignForm({
     const updated = parts.map(part => part.trim()).filter(Boolean).join(', ') + ', ';
     setFormData({ ...formData, keywords: updated });
     setSuggestions([]);
+    setShowSuggestions(false);
   };
 
   const handleSubmit = (e) => {
@@ -72,51 +76,58 @@ function CampaignForm({
   return (
     <div className="form-container">
       <h2>{editCampaign ? 'Edit Campaign' : 'Create Campaign'}</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required maxLength={50} />
-        <div style={{ position: 'relative' }}>
-          <input
-            type="text"
-            name="keywords"
-            value={formData.keywords}
-            onChange={handleKeywordInput}
-            placeholder="Keywords (comma separated)"
-            required
-          />
-          {suggestions.length > 0 && (
-            <ul style={{
-              position: 'absolute', top: '100%', left: 0,
-              backgroundColor: 'white', border: '1px solid #ccc',
-              width: '100%', zIndex: 1, listStyle: 'none', padding: 0, margin: 0
-            }}>
-              {suggestions.map(k => (
-                <li key={k} onClick={() => handleSuggestionClick(k)} style={{ padding: '5px', cursor: 'pointer' }}>
-                  {k}
-                </li>
-              ))}
-            </ul>
-          )}
+      <form onSubmit={handleSubmit} className="campaign-form">
+        <div className="form-row">
+          <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required maxLength={50} />
+          <input type="number" name="bidAmount" value={formData.bidAmount} onChange={handleChange} placeholder="Bid Amount" required />
+          <input type="number" name="campaignFund" value={formData.campaignFund} onChange={handleChange} placeholder="Campaign Fund" required />
+          <input type="number" name="radius" value={formData.radius} onChange={handleChange} placeholder="Radius" required />
         </div>
-        <input type="number" name="bidAmount" value={formData.bidAmount} onChange={handleChange} placeholder="Bid Amount" required />
-        <input type="number" name="campaignFund" value={formData.campaignFund} onChange={handleChange} placeholder="Campaign Fund" required />
-        <select name="town" value={formData.town} onChange={handleChange} required>
-          <option value="">Select Town</option>
-          <option value="Krakow">Krakow</option>
-          <option value="Warsaw">Warsaw</option>
-          <option value="Kielce">Kielce</option>
-          <option value="Gdansk">Gdansk</option>
-          <option value="Wroclaw">Wroclaw</option>
-        </select>
-        <input type="number" name="radius" value={formData.radius} onChange={handleChange} placeholder="Radius" required />
-        <label>
-          <input type="checkbox" name="status" checked={formData.status} onChange={handleChange} />
-          Active
-        </label>
-        <button type="submit">{editCampaign ? 'Update' : 'Create'}</button>
+
+        <div className="form-row">
+          <div className="typeahead-wrapper">
+            <input
+              type="text"
+              name="keywords"
+              value={formData.keywords}
+              onChange={handleKeywordInput}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+              placeholder="Keywords (comma separated)"
+              required
+            />
+            {showSuggestions && suggestions.length > 0 && (
+              <ul className="typeahead-dropdown">
+                {suggestions.map((k, i) => (
+                  <li key={i} onMouseDown={() => handleSuggestionClick(k)}>{k}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <select name="town" value={formData.town} onChange={handleChange} required>
+            <option value="">Select Town</option>
+            <option value="Krakow">Krakow</option>
+            <option value="Warsaw">Warsaw</option>
+            <option value="Kielce">Kielce</option>
+            <option value="Gdansk">Gdansk</option>
+            <option value="Wroclaw">Wroclaw</option>
+          </select>
+
+          <button
+            type="button"
+            className={`status-toggle ${formData.status ? 'active' : 'inactive'}`}
+            onClick={() => setFormData(prev => ({ ...prev, status: !prev.status }))}
+          >
+            {formData.status ? 'Active' : 'Inactive'}
+          </button>
+        </div>
+
+        <div className="form-actions">
+          <button type="submit">{editCampaign ? 'Update' : 'Create'}</button>
+          {editCampaign && <button type="button" onClick={onCancel}>Cancel</button>}
+        </div>
       </form>
-      {editCampaign && (
-        <button onClick={onCancel} style={{ marginTop: '10px' }}>Cancel Edit</button>
-      )}
     </div>
   );
 }
