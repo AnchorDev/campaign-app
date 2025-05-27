@@ -4,7 +4,7 @@ export function useCampaigns() {
   const [campaigns, setCampaigns] = useState([]);
 
   useEffect(() => {
-    fetch('https://campaign-app-e8fp.onrender.com')
+    fetch('https://campaign-app-e8fp.onrender.com/api/campaigns')
       .then(res => res.json())
       .then(data => setCampaigns(data));
   }, []);
