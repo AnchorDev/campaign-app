@@ -10,22 +10,13 @@ export function useCampaigns() {
   }, []);
 
   const deleteCampaign = (id) => {
-    fetch(`http://localhost:8080/api/campaigns/${id}`, { method: 'DELETE' })
-      .then(() => setCampaigns(prev => prev.filter(c => c.id !== id)));
+    setCampaigns(prev => prev.filter(c => c.id !== id));
   };
 
   const updateCampaign = (updated) => {
-    fetch(`http://localhost:8080/api/campaigns/${updated.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated)
-    })
-      .then(res => res.json())
-      .then(data => {
-        setCampaigns(prev =>
-          prev.map(c => c.id === data.id ? data : c)
-        );
-      });
+    setCampaigns(prev =>
+      prev.map(c => c.id === updated.id ? updated : c)
+    );
   };
 
   return {

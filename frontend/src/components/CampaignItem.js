@@ -13,10 +13,11 @@ function CampaignItem({ campaign, onEdit, onDelete, onToggle }) {
       </div>
       <div className="campaign-buttons">
         <button onClick={() => onEdit(campaign)}>Edit</button>
-        <button onClick={() => onDelete(campaign.id)}>Delete</button>
-        <button 
-        className={campaign.status ? 'active-btn' : 'inactive-btn'}
-        onClick={() => onToggle({ ...campaign, status: !campaign.status })}>
+        <button onClick={() => onDelete(campaign)}>Delete</button>
+        <button
+          className={campaign.status ? 'active-btn' : 'inactive-btn'}
+          onClick={() => onToggle(campaign)}
+        >
           {campaign.status ? 'Deactivate' : 'Activate'}
         </button>
       </div>

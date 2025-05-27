@@ -79,8 +79,8 @@ function CampaignForm({
       <form onSubmit={handleSubmit} className="campaign-form">
         <div className="form-row">
           <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required maxLength={50} />
-          <input type="number" name="bidAmount" value={formData.bidAmount} onChange={handleChange} placeholder="Bid Amount" required />
-          <input type="number" name="campaignFund" value={formData.campaignFund} onChange={handleChange} placeholder="Campaign Fund" required />
+          <input type="number" name="bidAmount" value={formData.bidAmount} onChange={handleChange} placeholder="Bid Amount" min="1" required />
+          <input type="number" name="campaignFund" value={formData.campaignFund} onChange={handleChange} placeholder="Campaign Fund" min="1" required />
           <input type="number" name="radius" value={formData.radius} onChange={handleChange} placeholder="Radius" required />
         </div>
 

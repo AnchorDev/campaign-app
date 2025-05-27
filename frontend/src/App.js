@@ -18,6 +18,8 @@ function App() {
   const [showForm, setShowForm] = useState(false);
   const [editCampaign, setEditCampaign] = useState(null);
 
+  const [emeraldBalance, setEmeraldBalance] = useState(1000.00);
+
   const handleEdit = (campaign) => {
     setEditCampaign(campaign);
     setShowForm(true);
@@ -29,6 +31,9 @@ function App() {
       ? `http://localhost:8080/api/campaigns/${editCampaign.id}`
       : "http://localhost:8080/api/campaigns";
 
+    const oldFund = editCampaign?.status ? parseFloat(editCampaign.campaignFund) : 0;
+    const newFund = campaignData.status ? parseFloat(campaignData.campaignFund) : 0;
+
     fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
@@ -38,13 +43,49 @@ function App() {
       .then(data => {
         if (editCampaign) {
           updateCampaign(data);
+          setEmeraldBalance(prev => prev + oldFund - newFund);
         } else {
           setCampaigns(prev => [...prev, data]);
+          if (data.status) {
+            setEmeraldBalance(prev => prev - newFund);
+          }
         }
         setEditCampaign(null);
         setShowForm(false);
       });
   };
+
+  const handleToggleStatus = (campaign) => {
+    const toggledStatus = !campaign.status;
+    const updated = { ...campaign, status: toggledStatus };
+
+    fetch(`http://localhost:8080/api/campaigns/${campaign.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated)
+    })
+      .then(res => res.json())
+      .then(data => {
+        updateCampaign(data);
+
+        const fund = parseFloat(data.campaignFund);
+        setEmeraldBalance(prev =>
+          toggledStatus ? prev - fund : prev + fund
+        );
+      });
+  };
+
+  const handleDelete = (campaign) => {
+  fetch(`http://localhost:8080/api/campaigns/${campaign.id}`, {
+    method: 'DELETE'
+  })
+    .then(() => {
+      deleteCampaign(campaign.id);
+      if (campaign.status) {
+        setEmeraldBalance(prev => prev + parseFloat(campaign.campaignFund));
+      }
+    });
+};
 
   const handleCancel = () => {
     setEditCampaign(null);
@@ -79,12 +120,15 @@ function App() {
       <div className='campaign-container'>
         <div className='campaign-column'>
           <h2>Active Campaigns</h2>
-          <CampaignList campaigns={active} onEdit={handleEdit} onDelete={deleteCampaign} onToggle={updateCampaign} />
+          <CampaignList campaigns={active} onEdit={handleEdit} onDelete={handleDelete} onToggle={handleToggleStatus} />
         </div>
         <div className='campaign-column'>
           <h2>Inactive Campaigns</h2>
-          <CampaignList campaigns={inactive} onEdit={handleEdit} onDelete={deleteCampaign} onToggle={updateCampaign} />
+          <CampaignList campaigns={inactive} onEdit={handleEdit} onDelete={handleDelete} onToggle={handleToggleStatus} />
         </div>
+      </div>
+      <div className='emerald-balance'>
+        <p>Emerald Balance: ${emeraldBalance.toFixed(2)}</p>
       </div>
     </div>
   );

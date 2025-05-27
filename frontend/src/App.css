@@ -88,3 +88,15 @@ li {
 .active-btn:hover {
   background-color: #c82333;
 }
+
+.emerald-balance {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #f9f9f9;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  z-index: 10;
+}
