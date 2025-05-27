@@ -28,8 +28,8 @@ function App() {
   const handleFormSubmit = (campaignData) => {
     const method = editCampaign ? 'PUT' : 'POST';
     const url = editCampaign
-      ? `https://https://campaign-app-production-0136.up.railway.app/api/campaigns/${editCampaign.id}`
-      : "https://https://campaign-app-production-0136.up.railway.app/api/campaigns";
+      ? `https://campaign-app-production-0136.up.railway.app/api/campaigns/${editCampaign.id}`
+      : "https://campaign-app-production-0136.up.railway.app/api/campaigns";
 
     const oldFund = editCampaign?.status ? parseFloat(editCampaign.campaignFund) : 0;
     const newFund = campaignData.status ? parseFloat(campaignData.campaignFund) : 0;
