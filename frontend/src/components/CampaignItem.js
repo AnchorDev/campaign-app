@@ -3,15 +3,21 @@ import React from 'react';
 function CampaignItem({ campaign, onEdit, onDelete, onToggle }) {
   return (
     <li>
-      <strong>{campaign.name}</strong> - {campaign.keywords.join(', ')} - ${campaign.bidAmount} - ${campaign.campaignFund} - {campaign.town} - {campaign.radius}km
-      <button onClick={() => {
-        const updated = { ...campaign, status: !campaign.status };
-        onToggle(updated);
-      }}>
-        {campaign.status ? 'Deactivate' : 'Activate'}
-      </button>
-      <button onClick={() => onDelete(campaign.id)}>Delete</button>
-      <button onClick={() => onEdit(campaign)}>Edit</button>
+      <div className="campaign-info">
+        <strong>{campaign.name}</strong><br />
+        Keywords: {campaign.keywords.join(', ')}<br />
+        Bid: ${campaign.bidAmount}<br />
+        Fund: ${campaign.campaignFund}<br />
+        Town: {campaign.town}<br />
+        Radius: {campaign.radius} km
+      </div>
+      <div className="campaign-buttons">
+        <button onClick={() => onEdit(campaign)}>Edit</button>
+        <button onClick={() => onDelete(campaign.id)}>Delete</button>
+        <button onClick={() => onToggle({ ...campaign, status: !campaign.status })}>
+          {campaign.status ? 'Deactivate' : 'Activate'}
+        </button>
+      </div>
     </li>
   );
 }

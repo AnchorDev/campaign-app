@@ -67,3 +67,12 @@ li {
   gap: 20px;
   position: relative;
 }
+.campaign-info {
+  flex-grow: 1;
+}
+.campaign-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
