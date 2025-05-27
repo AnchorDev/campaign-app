@@ -12,7 +12,13 @@ function CampaignForm({
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
-    setFormData(initialData);
+    const updatedData = {
+      ...initialData,
+      keywords: Array.isArray(initialData.keywords)
+        ? initialData.keywords.join(', ')
+        : initialData.keywords
+    };
+    setFormData(updatedData);
   }, [initialData]);
 
   const handleChange = (e) => {
@@ -98,6 +104,8 @@ function CampaignForm({
           <option value="Krakow">Krakow</option>
           <option value="Warsaw">Warsaw</option>
           <option value="Kielce">Kielce</option>
+          <option value="Gdansk">Gdansk</option>
+          <option value="Wroclaw">Wroclaw</option>
         </select>
         <input type="number" name="radius" value={formData.radius} onChange={handleChange} placeholder="Radius" required />
         <label>
