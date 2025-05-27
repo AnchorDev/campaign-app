@@ -4,7 +4,7 @@ export function useCampaigns() {
   const [campaigns, setCampaigns] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/campaigns')
+    fetch('https://campaign-app-production-0136.up.railway.app/api/campaigns')
       .then(res => res.json())
       .then(data => setCampaigns(data));
   }, []);
