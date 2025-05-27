@@ -2,6 +2,7 @@ package com;
 
 import com.model.Campaign;
 import com.repository.CampaignRepository;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,12 +23,12 @@ public class CampaignController {
     }
 
     @PostMapping
-    public Campaign createCampaign(@RequestBody Campaign campaign){
+    public Campaign createCampaign(@Valid @RequestBody Campaign campaign){
         return campaignRepository.save(campaign);
     }
 
     @PutMapping("/{id}")
-    public Campaign updateCampaign(@PathVariable Long id, @RequestBody Campaign campaign){
+    public Campaign updateCampaign(@PathVariable Long id,@Valid @RequestBody Campaign campaign){
         campaign.setId(id);
         return campaignRepository.save(campaign);
     }
